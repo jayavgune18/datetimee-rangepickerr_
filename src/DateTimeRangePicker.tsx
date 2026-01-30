@@ -118,45 +118,43 @@ const DateTimeRangePicker: React.FC<DateTimeRangePickerProps> = ({
   const isRangeEnd = (date: Date) => value.end && isSameDay(date, value.end);
 
   return (
-    <div className="max-w-md mx-auto bg-white border border-slate-200 rounded-2xl shadow-2xl overflow-hidden font-sans ring-1 ring-slate-900/5">
-      {/* Header */}
-      <div className="bg-slate-50 p-4 border-b border-slate-100">
-        <div className="flex justify-between items-center mb-1">
-          <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Selected Range</span>
-          {error && <span className="text-xs font-medium text-rose-500 bg-rose-50 px-2 py-0.5 rounded-full">{error}</span>}
-        </div>
-        <div className="text-sm font-medium text-slate-900 truncate">
-          {value.start ? formatInTimezone(value.start, tz, 'MMM d, p') : 'Pick a start'}
-          <span className="mx-2 text-slate-400">→</span>
-          {value.end ? formatInTimezone(value.end, tz, 'MMM d, p') : 'Pick an end'}
+    <div className="max-w-md mx-auto bg-white border border-gray-300 rounded shadow-sm text-gray-800 font-sans">
+      {/* Simple Selection Display */}
+      <div className="p-4 border-b border-gray-200">
+        <label className="block text-xs font-medium text-gray-500 mb-1">SELECTED RANGE</label>
+        <div className="text-sm font-semibold truncate">
+          {value.start ? formatInTimezone(value.start, tz, 'MMM d, p') : 'Start'}
+          <span className="mx-2 text-gray-400">-</span>
+          {value.end ? formatInTimezone(value.end, tz, 'MMM d, p') : 'End'}
         </div>
       </div>
 
-      <div className="p-6">
-        {/* Timezone */}
-        <div className="mb-6">
-          <label className="block text-xs font-bold text-slate-700 mb-2 uppercase tracking-wide">Timezone</label>
-          <select
-            value={tz}
-            onChange={(e) => onChange({ ...value, timezone: e.target.value })}
-            className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
-          >
-            <option value="America/New_York">America/New_York</option>
-            <option value="Europe/London">Europe/London</option>
-            <option value="Asia/Tokyo">Asia/Tokyo</option>
-          </select>
+      <div className="p-5">
+        <div className="flex gap-4 mb-4">
+          {/* Timezone Select */}
+          <div className="flex-1">
+            <label className="block text-xs font-medium text-gray-600 mb-1">Timezone</label>
+            <select
+              value={tz}
+              onChange={(e) => onChange({ ...value, timezone: e.target.value })}
+              className="w-full text-sm p-1.5 border border-gray-300 rounded bg-white outline-none focus:border-blue-500"
+            >
+              <option value="America/New_York">New York</option>
+              <option value="Europe/London">London</option>
+              <option value="Asia/Tokyo">Tokyo</option>
+            </select>
+          </div>
         </div>
 
-        {/* Presets */}
+        {/* Presets - Simple chips */}
         {presets.length > 0 && (
-          <div className="mb-6">
-            <label className="block text-xs font-bold text-slate-700 mb-2 uppercase tracking-wide">Quick Presets</label>
+          <div className="mb-4">
             <div className="flex flex-wrap gap-2">
               {presets.map((preset, idx) => (
                 <button
                   key={idx}
                   onClick={() => handlePresetSelect(preset)}
-                  className="px-3 py-1.5 text-xs font-medium bg-white border border-slate-200 text-slate-600 rounded-full hover:border-indigo-500 hover:text-indigo-600 hover:bg-indigo-50 transition-all active:scale-95"
+                  className="px-2 py-1 text-xs border border-gray-300 rounded hover:bg-gray-50 bg-white transition-colors"
                 >
                   {preset.label}
                 </button>
@@ -165,33 +163,22 @@ const DateTimeRangePicker: React.FC<DateTimeRangePickerProps> = ({
           </div>
         )}
 
-        {/* Calendar */}
-        <div className="mb-6">
-          <div className="flex justify-between items-center mb-4">
-            <button
-              onClick={() => setCurrentMonth(subMonths(currentMonth, 1))}
-              className="p-2 hover:bg-slate-100 rounded-full text-slate-600 transition-colors"
-            >
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="15 19l-7-7 7-7" /></svg>
+        {/* Calendar Grid */}
+        <div className="mb-4">
+          <div className="flex justify-between items-center mb-2">
+            <button onClick={() => setCurrentMonth(subMonths(currentMonth, 1))} className="p-1 hover:bg-gray-100 rounded">
+              <span className="text-lg">‹</span>
             </button>
-            <span className="text-sm font-bold text-slate-800">
+            <span className="text-sm font-bold">
               {formatInTimezone(currentMonth, tz, 'MMMM yyyy')}
             </span>
-            <button
-              onClick={() => setCurrentMonth(addMonths(currentMonth, 1))}
-              className="p-2 hover:bg-slate-100 rounded-full text-slate-600 transition-colors"
-            >
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="9 5l7 7-7 7" /></svg>
+            <button onClick={() => setCurrentMonth(addMonths(currentMonth, 1))} className="p-1 hover:bg-gray-100 rounded">
+              <span className="text-lg">›</span>
             </button>
           </div>
-          <div
-            ref={gridRef}
-            role="grid"
-            onKeyDown={handleKeyDown}
-            className="grid grid-cols-7 gap-1"
-          >
+          <div ref={gridRef} role="grid" onKeyDown={handleKeyDown} className="grid grid-cols-7 text-[11px]">
             {weekDays.map((day, i) => (
-              <div key={`${day}-${i}`} className="p-2 text-center text-[10px] font-bold text-slate-400 uppercase">
+              <div key={`${day}-${i}`} className="p-2 text-center text-gray-400 font-medium">
                 {day}
               </div>
             ))}
@@ -210,78 +197,73 @@ const DateTimeRangePicker: React.FC<DateTimeRangePickerProps> = ({
                   disabled={disabled}
                   onClick={() => handleDateSelect(date)}
                   onFocus={() => setFocusedDate(date)}
-                  className={`relative p-2 text-sm text-center rounded-lg transition-all focus:outline-none focus:ring-2 focus:ring-indigo-500 ${disabled
-                    ? 'text-slate-200 cursor-not-allowed'
-                    : inRange
-                      ? 'bg-indigo-50 text-indigo-700 font-semibold'
-                      : 'hover:bg-slate-50 text-slate-700'
-                    } ${isStart || isEnd ? 'bg-indigo-600 !text-white z-10 scale-110 shadow-lg' : ''}`}
+                  className={`p-2 text-center rounded transition-colors focus:outline-none ${disabled
+                      ? 'text-gray-300'
+                      : inRange
+                        ? 'bg-blue-50 text-blue-800'
+                        : 'hover:bg-gray-50 text-gray-700'
+                    } ${isStart || isEnd ? 'bg-blue-600 !text-white font-bold' : ''}`}
                 >
                   {formatInTimezone(date, tz, 'd')}
-                  {(isStart || isEnd) && (
-                    <span className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-1 h-1 bg-white rounded-full opacity-50"></span>
-                  )}
                 </button>
               );
             })}
           </div>
         </div>
 
-        {/* Time Pickers */}
-        <div className="flex gap-4 mb-6">
+        {/* Time Settings */}
+        <div className="flex gap-2">
           <div className="flex-1">
-            <label className="block text-[10px] font-bold text-slate-500 uppercase mb-1.5 ml-1">Start Time</label>
-            <div className="flex items-center bg-slate-50 border border-slate-200 rounded-lg px-2 py-1">
+            <label className="block text-xs font-medium text-gray-500 mb-1">Start Time</label>
+            <div className="flex border border-gray-300 rounded p-1 text-xs">
               <input
-                type="number" min="0" max="23"
-                value={startTime.hour}
+                type="number" min="0" max="23" value={startTime.hour}
                 onChange={(e) => handleTimeChange('start', 'hour', parseInt(e.target.value) || 0)}
-                className="w-full bg-transparent text-center text-sm font-medium focus:outline-none"
+                className="w-full text-center outline-none"
               />
-              <span className="text-slate-300">:</span>
+              <span className="px-0.5">:</span>
               <input
-                type="number" min="0" max="59"
-                value={startTime.minute}
+                type="number" min="0" max="59" value={startTime.minute}
                 onChange={(e) => handleTimeChange('start', 'minute', parseInt(e.target.value) || 0)}
-                className="w-full bg-transparent text-center text-sm font-medium focus:outline-none"
+                className="w-full text-center outline-none"
               />
             </div>
           </div>
           <div className="flex-1">
-            <label className="block text-[10px] font-bold text-slate-500 uppercase mb-1.5 ml-1">End Time</label>
-            <div className="flex items-center bg-slate-50 border border-slate-200 rounded-lg px-2 py-1">
+            <label className="block text-xs font-medium text-gray-500 mb-1">End Time</label>
+            <div className="flex border border-gray-300 rounded p-1 text-xs">
               <input
-                type="number" min="0" max="23"
-                value={endTime.hour}
+                type="number" min="0" max="23" value={endTime.hour}
                 onChange={(e) => handleTimeChange('end', 'hour', parseInt(e.target.value) || 0)}
-                className="w-full bg-transparent text-center text-sm font-medium focus:outline-none"
+                className="w-full text-center outline-none"
               />
-              <span className="text-slate-300">:</span>
+              <span className="px-0.5">:</span>
               <input
-                type="number" min="0" max="59"
-                value={endTime.minute}
+                type="number" min="0" max="59" value={endTime.minute}
                 onChange={(e) => handleTimeChange('end', 'minute', parseInt(e.target.value) || 0)}
-                className="w-full bg-transparent text-center text-sm font-medium focus:outline-none"
+                className="w-full text-center outline-none"
               />
             </div>
           </div>
         </div>
       </div>
 
-      {/* Footer Actions */}
-      <div className="bg-slate-50 p-4 border-t border-slate-100 flex gap-3">
+      {error && <div className="px-5 pb-3 text-[11px] text-red-600">{error}</div>}
+
+      {/* Simplified Footer Actions */}
+      <div className="px-5 py-3 border-t border-gray-200 flex justify-end gap-2 bg-gray-50">
         <button
           onClick={onCancel}
-          className="flex-1 px-4 py-2 text-sm font-bold text-slate-600 hover:text-slate-800 hover:bg-slate-200 rounded-xl transition-all"
+          className="px-3 py-1.5 text-xs font-medium text-gray-600 hover:bg-gray-200 rounded transition-colors"
         >
           Cancel
         </button>
         <button
           onClick={() => onApply?.(value)}
           disabled={!!error || !value.start || !value.end}
-          className="flex-[2] px-4 py-2 text-sm font-bold text-white bg-indigo-600 hover:bg-indigo-700 disabled:bg-slate-300 disabled:cursor-not-allowed rounded-xl shadow-lg shadow-indigo-200 transition-all active:scale-[0.98]"
+          className="px-4 py-1.5 text-xs font-bold text-white bg-blue-600 hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed rounded shadow-sm transition-colors"
         >
-          Apply Range
+          Apply
         </button>
       </div>
     </div>
