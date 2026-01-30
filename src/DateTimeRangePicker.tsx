@@ -9,8 +9,8 @@ interface DateTimeRangePickerProps {
   onChange: (value: DateTimeRange) => void;
   onApply?: (value: DateTimeRange) => void;
   onCancel?: () => void;
-  constraints?: Constraints;
-  presets?: Preset[];
+  constraints?: Constraints | undefined;
+  presets?: Preset[] | undefined;
 }
 
 const DateTimeRangePicker: React.FC<DateTimeRangePickerProps> = ({
@@ -211,10 +211,10 @@ const DateTimeRangePicker: React.FC<DateTimeRangePickerProps> = ({
                   onClick={() => handleDateSelect(date)}
                   onFocus={() => setFocusedDate(date)}
                   className={`relative p-2 text-sm text-center rounded-lg transition-all focus:outline-none focus:ring-2 focus:ring-indigo-500 ${disabled
-                      ? 'text-slate-200 cursor-not-allowed'
-                      : inRange
-                        ? 'bg-indigo-50 text-indigo-700 font-semibold'
-                        : 'hover:bg-slate-50 text-slate-700'
+                    ? 'text-slate-200 cursor-not-allowed'
+                    : inRange
+                      ? 'bg-indigo-50 text-indigo-700 font-semibold'
+                      : 'hover:bg-slate-50 text-slate-700'
                     } ${isStart || isEnd ? 'bg-indigo-600 !text-white z-10 scale-110 shadow-lg' : ''}`}
                 >
                   {formatInTimezone(date, tz, 'd')}

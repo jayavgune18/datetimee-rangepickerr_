@@ -34,14 +34,14 @@ const constraints: Constraints = {
 const presets: Preset[] = [
   {
     label: 'Last 24 hours',
-    getRange: (now, tz) => ({
+    getRange: (now) => ({
       start: subDays(now, 1),
       end: now,
     }),
   },
   {
     label: 'Last 7 days',
-    getRange: (now, tz) => ({
+    getRange: (now) => ({
       start: subDays(now, 7),
       end: now,
     }),
@@ -59,6 +59,8 @@ const StatefulDateTimeRangePicker: React.FC<{
     <DateTimeRangePicker
       value={value}
       onChange={setValue}
+      onApply={(val) => alert(`Applied: ${val.start} to ${val.end}`)}
+      onCancel={() => alert('Cancelled')}
       constraints={constraints}
       presets={presets}
     />
