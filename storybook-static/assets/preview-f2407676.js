@@ -1,1 +1,0 @@
-const e={parameters:{actions:{argTypesRegex:"^on[A-Z].*"},controls:{matchers:{color:/(background|color)$/i,date:/Date$/i}},a11y:{config:{rules:[{id:"color-contrast",enabled:!0}]}}}};export{e as default};
